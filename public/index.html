@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fail2FWD – Learn. Build. Move Forward.</title>
+  <meta name="description" content="Fail2FWD: live courses, demo lecture registration, and a simple admin batch scheduler – all in one static HTML file.">
+  <style>
+    :root{
+      --bg:#0b0f19; /* deep slate */
+      --card:#12172a;
+      --muted:#9aa4b2;
+      --text:#e5e7eb;
+      --brand:#64b5f6;
+      --brand2:##0b0f19;
+      --accent:#22d3ee;
+      --danger:#ef4444;
+      --success:#22c55e;
+      --warning:#f59e0b;
+      --ring:rgba(100,181,246,.55);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;scroll-behavior:smooth;background:radial-gradient(1200px 600px at 80% -10%,rgba(167,139,250,.18),transparent),radial-gradient(800px 400px at 10% 10%,rgba(34,211,238,.15),transparent),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;z-index:50;background:rgba(11,15,25,.7);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand strong {font-size: 25px;}
+    .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:#0b0f19;font-weight:800}
+    .nav ul{display:flex;gap:16px;list-style:none;padding:0;margin:0}
+    .nav a{padding:8px 12px;border-radius:10px;opacity:.9}
+    .nav a:hover{background:rgba(255,255,255,.06);opacity:1}
+    .cta{background:linear-gradient(135deg,var(--brand),var(--accent));color:#0b0f19;font-weight:700;padding:10px 14px;border-radius:12px;border:none;cursor:pointer}
+
+    .hero{padding:72px 0}
+    .hero .wrap{display:grid;gap:22px;grid-template-columns:1.1fr .9fr;align-items:center}
+    .badge{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);color:var(--muted);padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.03)}
+    .h1{font-size:42px;line-height:1.15;margin:10px 0 8px}
+    .lead{color:#cbd5e1}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    .hero .visual{aspect-ratio:4/3;border-radius:18px;background:radial-gradient(80% 60% at 50% 30%,rgba(100,181,246,.25),transparent),radial-gradient(60% 40% at 60% 60%,rgba(167,139,250,.25),transparent),var(--card);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center}
+
+    section{padding:56px 0}
+    h2{font-size:28px;margin:0 0 8px}
+    p.muted{color:var(--muted);margin-top:0}
+
+    /* What is Fail2FWD */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature{padding:18px}
+    .feature h3{margin:4px 0 6px}
+
+    /* Courses carousel */
+    .carousel{position:relative}
+    .track{display:flex;gap:16px;overflow:hidden;scroll-behavior:smooth}
+    .course{min-width:260px;flex:0 0 260px}
+    .course .thumb{height:130px;border-radius:12px;background:linear-gradient(135deg,rgba(100,181,246,.35),rgba(167,139,250,.35)),#0f172a;border:1px solid rgba(255,255,255,.08)}
+    .course h4{margin:10px 0 6px;font-size:18px }
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);font-size:12px;color:#99f6e4}
+    .navbtn{position:absolute;top:50%;transform:translateY(-50%);border:none;background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.12);width:42px;height:42px;border-radius:12px;cursor:pointer}
+    .navbtn:hover{outline:2px solid var(--ring)}
+    .navbtn.left{left:-8px}
+    .navbtn.right{right:-8px}
+
+    /* Forms */
+    .grid{display:grid;gap:16px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    .input{display:flex;flex-direction:column;gap:6px}
+    .input input,.input select,.input textarea{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;color:var(--text)}
+     .input select {
+        background: white; /* Change the background to white */
+        color: black;      /* Change the text color to black */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+     appearance: none;
+    }
+    .input input:focus,.input select:focus,.input textarea:focus{outline:2px solid var(--ring)}
+    .btn{padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(135deg,rgba(100,181,246,.25),rgba(34,211,238,.2));color:var(--text);cursor:pointer}
+    .btn.secondary{background:transparent}
+    .btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
+    .btn.success{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.35)}
+
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    th{color:#cbd5e1;font-weight:600}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+
+    footer{padding:36px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width: 900px){
+      .hero .wrap{grid-template-columns:1fr}
+      .features{grid-template-columns:1fr}
+      .grid.two{grid-template-columns:1fr}
+      .nav ul{display:none}
+    }
+    
+  </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+       <img src="logo1.png" alt="Fail2FWD Logo" class="logo" width:15%; height:20%; object-fit:contain; padding: 2px;/>
+       <strong>Fail2FWD </strong>
+    </div>
+      <ul>
+        <li><a href="#about">What is Fail2FWD?</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#demo">Registrations</a></li>
+        <li><a href="#batches">Batches</a></li>
+        <li><a id="batchesLink" href="#batches" style="display:none;">Batches</a></li>
+        <li><a id="adminLink" href="#admin" style="display:none;">Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container wrap">
+        <div>
+          <span class="badge">🚀 Learn by building • Mentor-led • Career-focused</span>
+           <h1 class="h1">Turn failures into forward motion.</h1>
+             <p class="lead">At Fail2FWD, we know that every great journey has its stumbles. That's why we don't just provide lessons—we provide a support system. Our platform is built for live, one-on-one sessions where you get direct mentorship, real-time feedback, and the human connection needed to build confidence and move forward with your projects.</p>
+          <div style="display:flex;gap:12px;margin-top:16px">
+            <a class="btn" href="#courses">Explore Courses</a>
+            <a class="btn secondary" href="#demo">Join Free Demo</a>
+          </div>
+        </div>
+        <div class="visual card">
+          <div style="text-align:center;padding:20px">
+            <h3 style="margin:0">Next Cohort Starts</h3>
+            <p class="muted" id="nextCohort">Calculating…</p>
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:8px">
+              <div class="card" style="padding:16px 20px;border-radius:14px"><div class="muted">Learners</div><div style="font-size:24px;font-weight:700" id="statLearners">—</div></div>
+              <div class="card" style="padding:16px 20px;border-radius:14px"><div class="muted">Courses</div><div style="font-size:24px;font-weight:700" id="statCourses">—</div></div>
+              <div class="card" style="padding:16px 20px;border-radius:14px"><div class="muted">Projects</div><div style="font-size:24px;font-weight:700" id="statProjects">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT IS FAIL2FWD -->
+    <section id="about">
+      <div class="container">
+        <h2>What exactly is Fail2FWD?</h2>
+        <p class="muted">We're more than just a platform; we're a live community built for real-world learning. We focus on one-on-one interaction and continuous support to ensure you master every skill and build a portfolio that truly reflects your abilities.</p>
+        <div class="features">
+          <div class="card feature">
+            <h3>💬 24/7 Doubt Solving</h3>
+            <p>Get instant clarity anytime, anywhere. Our mentors are available around the clock via call or text to help you get unstuck and keep moving forward.</p>
+          </div>
+          <div class="card feature">
+            <h3>💻 Live Industrial Projects</h3>
+            <p>Work on industrial-level projects, not just academic problems. You'll solve daily challenges and build a portfolio of work that's ready for the job market.</p>
+          </div>
+          <div class="card feature">
+            <h3>📈 Weekly Progress Checks</h3>
+            <p>Stay on track with regular progress tracking. We conduct weekly tests and reviews to help you measure your growth and refine your skills in real time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section id="courses">
+      <div class="container">
+        <h2>Live Courses</h2>
+        <p class="muted">Swipe or use the arrows. 20+ courses, all live and mentor-led.</p>
+
+        <div class="carousel card" style="padding:18px">
+          <button class="navbtn left" id="prevBtn" aria-label="Previous">◀</button>
+          <div class="track" id="courseTrack"></div>
+          <button class="navbtn right" id="nextBtn" aria-label="Next">▶</button>
+        </div>
+      </div>
+    </section>
+
+     <!-- UPCOMING BATCHES SECTION (Publicly visible) -->
+    <section id="batches">
+      <div class="container">
+        <h2>Upcoming Batches</h2>
+        <p class="muted">Here are all the batches. Log in to see the details.</p>
+        <div class="card" style="padding:16px">
+          <div style="overflow:auto">
+            <table id="studentBatchTable">
+              <thead>
+                <tr><th>Title</th><th>Course</th><th>Instructor</th><th>Mode</th><th>Start</th><th>Time</th></tr>
+                <tr><td>Batch 1</td><td>DSA using Python</td><td>Karan Punwatkar</td><td>Online</td><td>7:00 PM - 8:00 PM</td><td><a href="https://meet.google.com/xyz-123-batch1" target="_blank">Join</a></td></tr>
+                <tr><td>Batch 2</td><td>DSA using Python</td><td>Karan Punwatkar</td><td>Online</td><td>6:00 PM - 7:00 PM</td><td><a href="https://meet.google.com/abc-456-batch2" target="_blank">Join</a></td></tr>
+                <tr><td>Batch 3</td><td>C Language for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td>8:00 AM - 9:00 AM</td><td><a href="https://meet.google.com/def-789-batch3" target="_blank">Join</a></td></tr>
+                <tr><td>Batch 4</td><td>Python for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td>8:00 PM - 9:00 PM</td><td><a href="https://meet.google.com/ghi-012-batch4" target="_blank">Join</a></td></tr>
+                <tr><td>Batch 5</td><td>Python for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td>9:00 PM - 10:00 PM</td><td><a href="https://meet.google.com/jkl-345-batch5" target="_blank">Join</a></td></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO LECTURE REGISTRATION -->
+    <section id="demo">
+      <div class="container">
+        <h2>Register for a Free Demo Lecture</h2>
+        <p class="muted">Fill this form to reserve your seat. We’ll confirm by email/SMS.</p>
+
+        <div class="card" style="padding:20px">
+          <form id="demoForm" class="grid two">
+            <div class="input">
+              <label>Full Name</label>
+              <input required name="name" placeholder="e.g., Sneha Sharma" />
+            </div>
+            <div class="input">
+              <label>Email</label>
+              <input required type="email" name="email" placeholder="you@example.com" />
+            </div>
+            <div class="input">
+              <label>Phone</label>
+              <input required name="phone" pattern="[0-9]{10}" placeholder="10-digit number" />
+            </div>
+            <div class="input">
+              <label>Choose Course</label>
+              <select required name="course" id="demoCourse"></select>
+            </div>
+            <div class="input">
+              <label>Preferred Date</label>
+              <input required type="date" name="date" />
+            </div>
+            <div class="input">
+              <label>Notes (Optional)</label>
+              <textarea name="notes" rows="1" placeholder="What do you expect from this demo?"></textarea>
+            </div>
+            <div style="grid-column:1/-1;display:flex;gap:10px;align-items:center">
+              <button class="btn" type="submit">Submit Registration</button>
+              <span id="demoMsg" class="muted"></span>
+              <butt type="button" class="btn secondary" id="exportDemoCsv">Export CSV</butt
+            </div>
+          </form>
+        </div>
+    </section>
+
+    <!-- LOGIN/AUTHENTICATION SECTION -->
+    <section id="auth" style="display:none;">
+      <div class="container" style="max-width:500px;">
+        <h2 id="authHeading">Log In / Register</h2>
+        <p class="muted" id="authSubheading">Enter your email and password to continue.</p>
+        <div class="card" style="padding:20px;">
+          <form id="authForm">
+            <div class="input">
+              <label>Email</label>
+              <input type="email" id="authEmail" required />
+            </div>
+            <div class="input" style="margin-top:10px;">
+              <label>Password</label>
+              <input type="password" id="authPassword" required />
+            </div>
+            <p id="authMessage" style="color:var(--danger);font-size:14px;margin-top:10px;"></p>
+            <button class="btn" type="submit" id="authSubmitButton" style="margin-top:16px;">Log In</button>
+            <button class="btn secondary" type="button" id="switchModeButton" style="margin-left:10px;margin-top:16px;">Switch to Register</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ADMIN BATCH SCHEDULER SECTION (Visible only to admins) -->
+    <section id="admin" style="display:none;">
+      <div class="container">
+        <h2>Admin: Batch Scheduler</h2>
+        <p class="muted">Add, edit, or delete batches.</p>
+
+        <div class="card" id="admin-form" style="padding:20px;margin-bottom:16px;">
+          <form id="batchForm" class="grid two">
+            <input type="hidden" name="id" />
+            <div class="input">
+              <label>Batch Title</label>
+              <input required name="title" placeholder="e.g., MERN Evening Cohort" />
+            </div>
+            <div class="input">
+              <label>Course</label>
+              <select required name="course" id="batchCourse"></select>
+            </div>
+            <div class="input">
+              <label>Instructor</label>
+              <input required name="instructor" placeholder="e.g., Karan" />
+            </div>
+            <div class="input">
+              <label>Mode</label>
+              <select name="mode">
+                <option>Online</option>
+                <option>Offline</option>
+                <option>Hybrid</option>
+              </select>
+            </div>
+            <div class="input">
+              <label>Start Date</label>
+              <input required type="date" name="start" />
+            </div>
+            <div class="input">
+              <label>Time (IST)</label>
+              <input required name="time" placeholder="7:00 PM - 9:00 PM" />
+            </div>
+            <div class="input" style="grid-column:1/-1">
+              <label>Notes</label>
+              <input name="notes" placeholder="e.g., Weekend-only, Includes capstone" />
+            </div>
+            <div style="grid-column:1/-1;display:flex;gap:10px;align-items:center">
+              <button class="btn success" type="submit" id="saveBatch">Save Batch</button>
+              <button class="btn secondary" type="reset" id="resetBatch">Reset</button>
+              <button class="btn secondary" type="button" id="exportBatchCsv">Export CSV</button>
+            </div>
+          </form>
+        </div>
+        <!-- This is the admin version of the batches table with actions -->
+        <div class="card" style="padding:16px">
+          <h3 style="margin:0 0 6px">All Batches (Admin View)</h3>
+          <div style="overflow:auto">
+            <table id="adminBatchTable">
+              <thead>
+                <tr><th>Title</th><th>Course</th><th>Instructor</th><th>Mode</th><th>Start</th><th>Time</th><th>Notes</th><th>Actions</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>© <span id="year"></span> Fail2FWD • All rights reserved.</div>
+      <div>Made with ❤️ in India • v1.0</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

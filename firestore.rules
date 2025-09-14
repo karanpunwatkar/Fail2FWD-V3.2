@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only allows authenticated users to read/write their own profile data.
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    // Admins can create and manage batches.
+    match /batches/{batchId} {
+      allow create, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if true;
+    }
+
+    // Anyone can register for a demo lecture.
+    match /democlassregistrations/{regId} {
+      allow create: if true;
+      allow read: if request.auth != null;
+    }
+  }
+}

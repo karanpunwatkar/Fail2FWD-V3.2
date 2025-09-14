@@ -1,0 +1,382 @@
+/* =======================================
+   Firebase Configuration & Initialization
+   ======================================= */
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCFdrSSFITp8FU78bZ7JRNRc48vt97c2Yo",
+  authDomain: "demoregistrations.firebaseapp.com",
+  projectId: "demoregistrations",
+  storageBucket: "demoregistrations.firebasestorage.app",
+  messagingSenderId: "582201279389",
+  appId: "1:582201279389:web:55239adeb6d9e8f1baa574",
+  measurementId: "G-F7X2KDDCZF"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = app.firestore();
+const analytics = firebase.analytics();
+const auth = app.auth();
+
+/* =======================================
+   DOM References & Global State
+   ======================================= */
+const yearEl = document.getElementById('year');
+const nextCohortEl = document.getElementById('nextCohort');
+const statLearners = document.getElementById('statLearners');
+const statCourses = document.getElementById('statCourses');
+const statProjects = document.getElementById('statProjects');
+const track = document.getElementById('courseTrack');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const demoForm = document.getElementById('demoForm');
+const demoMsg = document.getElementById('demoMsg');
+const demoTableBody = document.querySelector('#demoTable tbody');
+const demoCourse = document.getElementById('demoCourse');
+const exportDemoCsvBtn = document.getElementById('exportDemoCsv');
+const authButton = document.getElementById('authButton');
+const adminLink = document.getElementById('adminLink');
+const batchesLink = document.getElementById('batchesLink');
+const authSection = document.getElementById('auth');
+const authForm = document.getElementById('authForm');
+const authEmail = document.getElementById('authEmail');
+const authPassword = document.getElementById('authPassword');
+const authMessage = document.getElementById('authMessage');
+const authHeading = document.getElementById('authHeading');
+const authSubheading = document.getElementById('authSubheading');
+const authSubmitButton = document.getElementById('authSubmitButton');
+const switchModeButton = document.getElementById('switchModeButton');
+const adminSection = document.getElementById('admin');
+const studentBatchesSection = document.getElementById('batches');
+const batchForm = document.getElementById('batchForm');
+const adminBatchTableBody = document.querySelector('#adminBatchTable tbody');
+const studentBatchTableBody = document.querySelector('#studentBatchTable tbody');
+const batchCourse = document.getElementById('batchCourse');
+const exportBatchCsvBtn = document.getElementById('exportBatchCsv');
+
+const courses = [
+  { id: 'c01', title: 'MERN Full Stack', level:'Beginner–Advanced', duration:'12 weeks' },
+  { id: 'c02', title: 'React + TypeScript', level:'Intermediate', duration:'6 weeks' },
+  { id: 'c03', title: 'Node.js & Express', level:'Intermediate', duration:'5 weeks' },
+  { id: 'c04', title: 'MongoDB & Prisma', level:'Intermediate', duration:'4 weeks' },
+  { id: 'c05', title: 'Data Structures & Algorithms', level:'All Levels', duration:'10 weeks' },
+  { id: 'c06', title: 'SQL from Zero to Hero', level:'Beginner', duration:'6 weeks' },
+  { id: 'c07', title: 'Python for Developers', level:'Beginner', duration:'8 weeks' },
+  { id: 'c08', title: 'DevOps Bootcamp', level:'Intermediate', duration:'8 weeks' },
+  { id: 'c09', title: 'Docker & Kubernetes', level:'Intermediate', duration:'6 weeks' },
+  { id: 'c10', title: 'AWS for Developers', level:'Intermediate', duration:'6 weeks' },
+  { id: 'c11', title: 'Git & GitHub Mastery', level:'Beginner', duration:'2 weeks' },
+  { id: 'c12', title: 'Next.js 15 Essentials', level:'Intermediate', duration:'5 weeks' },
+  { id: 'c13', title: 'Tailwind CSS Pro', level:'Beginner', duration:'2 weeks' },
+  { id: 'c14', title: 'System Design Basics', level:'Advanced', duration:'5 weeks' },
+  { id: 'c15', title: 'Java Spring Boot', level:'Intermediate', duration:'8 weeks' },
+  { id: 'c16', title: 'Android with Kotlin', level:'Intermediate', duration:'8 weeks' },
+  { id: 'c17', title: 'AI for Web Devs', level:'Intermediate', duration:'6 weeks' },
+  { id: 'c18', title: 'Prompt Engineering', level:'All Levels', duration:'3 weeks' },
+  { id: 'c19', title: 'Cybersecurity Basics', level:'Beginner', duration:'4 weeks' },
+  { id: 'c20', title: 'Data Analytics with Power BI', level:'Beginner', duration:'6 weeks' },
+  { id: 'c21', title: 'Rust for Backend', level:'Advanced', duration:'6 weeks' },
+  { id: 'c22', title: 'Go Microservices', level:'Advanced', duration:'6 weeks' },
+];
+
+let authMode = 'login';
+
+/* =======================================
+   Authentication Logic
+   ======================================= */
+auth.onAuthStateChanged(async user => {
+  if (user) {
+    // User is signed in. Check their role.
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+    
+    // UI changes for a logged-in user
+    authButton.textContent = 'Log Out';
+    authButton.onclick = () => auth.signOut();
+    batchesLink.style.display = 'block';
+    studentBatchesSection.style.display = 'block';
+
+    if (userData && userData.role === 'admin') {
+      adminLink.style.display = 'block';
+      adminSection.style.display = 'block';
+      renderAdminBatches(); // Render admin table with actions
+    } else {
+      adminLink.style.display = 'none';
+      adminSection.style.display = 'none';
+      renderStudentBatches(); // Render student table without actions
+    }
+
+    // Hide the auth section after login
+    authSection.style.display = 'none';
+  } else {
+    // User is signed out.
+    authButton.textContent = 'Log In / Register';
+    authButton.onclick = () => {
+      authSection.style.display = 'block';
+      window.location.href = '#auth';
+    };
+    batchesLink.style.display = 'none';
+    adminLink.style.display = 'none';
+    adminSection.style.display = 'none'; // Hide admin panel when logged out
+    studentBatchesSection.style.display = 'none';
+  }
+});
+
+// Handle Login/Register Form Submission
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = authEmail.value;
+  const password = authPassword.value;
+  authMessage.textContent = '';
+
+  try {
+    if (authMode === 'register') {
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      await db.collection('users').doc(userCredential.user.uid).set({
+        email: email,
+        role: 'student', // Default role for new users
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      authMessage.textContent = '✅ Registration successful! You are now logged in.';
+    } else { // Login mode
+      await auth.signInWithEmailAndPassword(email, password);
+      authMessage.textContent = '✅ Logged in successfully!';
+    }
+    authMessage.style.color = 'var(--success)';
+  } catch (error) {
+    console.error("Authentication failed:", error.message);
+    authMessage.textContent = `❌ Authentication failed: ${error.message}`;
+    authMessage.style.color = 'var(--danger)';
+  }
+});
+
+// Switch between Login and Register modes
+switchModeButton.addEventListener('click', () => {
+  authMessage.textContent = '';
+  if (authMode === 'login') {
+    authMode = 'register';
+    authHeading.textContent = 'Register';
+    authSubheading.textContent = 'Create a new account.';
+    authSubmitButton.textContent = 'Register';
+    switchModeButton.textContent = 'Switch to Login';
+  } else {
+    authMode = 'login';
+    authHeading.textContent = 'Log In';
+    authSubheading.textContent = 'Log in to your account.';
+    authSubmitButton.textContent = 'Log In';
+    switchModeButton.textContent = 'Switch to Register';
+  }
+});
+
+
+/* =============================
+   Populate stats & hero details
+   ============================= */
+async function hydrateStats() {
+    yearEl.textContent = new Date().getFullYear();
+    try {
+        const demoSnapshot = await db.collection('democlassregistrations').get();
+        statLearners.textContent = (demoSnapshot.size + 80).toLocaleString('en-IN');
+    } catch (error) {
+        console.error("Error fetching demo stats: ", error);
+        statLearners.textContent = '80+';
+    }
+    statCourses.textContent = '20+';
+    statProjects.textContent = '50+';
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 9, 1);
+    const day = nextMonth.getDay();
+    const diff = (1 - day + 7) % 7;
+    const nextCohortDate = new Date(new Date().getFullYear(), 9, 1);
+    nextCohortEl.textContent = nextCohortDate.toDateString() + ' • 7:00 PM IST';
+}
+
+/* ==================
+   Build course cards
+   ==================*/
+function renderCourses(){
+  courses.forEach(c => {
+    const o1 = document.createElement('option'); o1.value=c.title; o1.textContent=c.title; demoCourse.appendChild(o1);
+    const o2 = document.createElement('option'); o2.value=c.title; o2.textContent=c.title; batchCourse.appendChild(o2);
+  });
+  track.innerHTML = '';
+  courses.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'card course';
+    card.innerHTML = `
+      <div class="thumb"></div>
+      <h4>${c.title}</h4>
+      <div class="pill">${c.level}</div>
+      <p class="muted" style="margin:8px 0 12px">Duration: ${c.duration}</p>
+      <div style="display:flex;gap:8px">
+        <a class="btn" href="#demo" onclick="document.querySelector('#demoCourse').value='${c.title}'">Book Demo</a>
+        <a class="btn secondary" href="#batches" onclick="document.querySelector('#batchCourse').value='${c.title}'">Check Batches</a>
+      </div>`;
+    track.appendChild(card);
+  });
+}
+
+/* =====================
+   Carousel interactions
+   ===================== */
+function setupCarousel(){
+  const step = 276;
+  prevBtn.addEventListener('click', ()=> track.scrollBy({left: -step, behavior:'smooth'}));
+  nextBtn.addEventListener('click', ()=> track.scrollBy({left: step, behavior:'smooth'}));
+  let auto = setInterval(()=> track.scrollBy({left: step, behavior:'smooth'}), 3500);
+  [track, prevBtn, nextBtn].forEach(el=>{
+    el.addEventListener('mouseenter', ()=> clearInterval(auto));
+    el.addEventListener('mouseleave', ()=> auto = setInterval(()=> track.scrollBy({left: step, behavior:'smooth'}), 3500));
+  });
+}
+
+/* ==========================
+   Demo registration handling
+   ========================== */
+db.collection('democlassregistrations').orderBy('timestamp', 'desc').limit(20).onSnapshot(snapshot => {
+    const regs = snapshot.docs.map(doc => doc.data());
+    demoTableBody.innerHTML = '';
+    regs.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.name}</td><td>${r.email}</td><td>${r.phone}</td><td>${r.course}</td><td>${r.date}</td><td>${r.notes || ''}</td>`;
+        demoTableBody.appendChild(tr);
+    });
+});
+
+demoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(demoForm);
+    const record = Object.fromEntries(fd.entries());
+    record.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    try {
+        await db.collection('democlassregistrations').add(record);
+        demoForm.reset();
+        demoMsg.textContent = '✅ Registered! We will contact you soon.';
+        setTimeout(() => demoMsg.textContent = '', 3000);
+        hydrateStats();
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        demoMsg.textContent = '❌ An error occurred. Please try again.';
+    }
+});
+
+exportDemoCsvBtn.addEventListener('click', async () => {
+    const snapshot = await db.collection('democlassregistrations').get();
+    const regs = snapshot.docs.map(doc => doc.data());
+    const csv = toCsv(regs);
+    download('fail2fwd_demo_registrations.csv', csv);
+});
+
+/* =====================
+   Batch scheduler (CRUD)
+   ===================== */
+// Function to render the student's view of batches
+function renderStudentBatches() {
+    db.collection('batches').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        studentBatchTableBody.innerHTML = '';
+        items.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${b.title}</td>
+                <td>${b.course}</td>
+                <td>${b.instructor}</td>
+                <td>${b.mode}</td>
+                <td>${b.start}</td>
+                <td>${b.time}</td>
+                <td>${b.notes || ''}</td>
+            `;
+            studentBatchTableBody.appendChild(tr);
+        });
+    });
+}
+
+// Function to render the admin's view of batches
+function renderAdminBatches() {
+    db.collection('batches').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        adminBatchTableBody.innerHTML = '';
+        items.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${b.title}</td>
+                <td>${b.course}</td>
+                <td>${b.instructor}</td>
+                <td>${b.mode}</td>
+                <td>${b.start}</td>
+                <td>${b.time}</td>
+                <td>${b.notes || ''}</td>
+                <td style="display:flex;gap:8px">
+                    <button class="btn" data-edit="${b.id}">Edit</button>
+                    <button class="btn danger" data-del="${b.id}">Delete</button>
+                </td>
+            `;
+            adminBatchTableBody.appendChild(tr);
+        });
+    });
+}
+
+batchForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(batchForm);
+    const data = Object.fromEntries(fd.entries());
+    try {
+        if (!data.id) {
+            await db.collection('batches').add({ ...data, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+        } else {
+            const docRef = db.collection('batches').doc(data.id);
+            await docRef.update(data);
+        }
+        batchForm.reset();
+        batchForm.querySelector('[name=id]').value = '';
+    } catch (error) {
+        console.error("Error saving document: ", error);
+    }
+});
+
+document.getElementById('resetBatch').addEventListener('click', () => {
+    batchForm.querySelector('[name=id]').value = '';
+});
+
+adminBatchTableBody.addEventListener('click', async (e) => {
+    const editId = e.target.getAttribute('data-edit');
+    const delId = e.target.getAttribute('data-del');
+    if (editId) {
+        const doc = await db.collection('batches').doc(editId).get();
+        const b = { id: doc.id, ...doc.data() };
+        if (!b) return;
+        for (const [k, v] of Object.entries(b)) {
+            const el = batchForm.querySelector(`[name=${CSS.escape(k)}]`);
+            if (el) el.value = v;
+        }
+        window.scrollTo({ top: batchForm.closest('section').offsetTop - 70, behavior: 'smooth' });
+    }
+    if (delId) {
+        if (confirm('Delete this batch?')) {
+            try {
+                await db.collection('batches').doc(delId).delete();
+            } catch (error) {
+                console.error("Error deleting document: ", error);
+            }
+        }
+    }
+});
+
+exportBatchCsvBtn.addEventListener('click', async () => {
+    const snapshot = await db.collection('batches').get();
+    const items = snapshot.docs.map(doc => doc.data());
+    const csv = toCsv(items);
+    download('fail2fwd_batches.csv', csv);
+});
+
+/* ==========
+   Boot
+   ========== */
+function boot() {
+    hydrateStats();
+    renderCourses();
+    setupCarousel();
+    // No initial setup needed for tables, as it's handled by onAuthStateChanged
+}
+
+document.addEventListener('DOMContentLoaded', boot);
