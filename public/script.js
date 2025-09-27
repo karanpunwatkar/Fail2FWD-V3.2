@@ -239,6 +239,16 @@ db.collection('democlassregistrations').orderBy('timestamp', 'desc').limit(20).o
     });
 });
 
+function populateDemoCourseSelect() {
+    demoCourse.innerHTML = ''; // Clear existing options
+    courses.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.title;       // The value submitted in form
+        option.textContent = c.title; // The visible text
+        demoCourse.appendChild(option);
+    });
+}
+
 demoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fd = new FormData(demoForm);
@@ -372,6 +382,7 @@ function boot() {
     hydrateStats();
     renderCourses();
     setupCarousel();
+    populateDemoCourseSelect();
     // No initial setup needed for tables, as it's handled by onAuthStateChanged
 }
 
