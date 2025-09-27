@@ -27,6 +27,7 @@ const statLearners = document.getElementById('statLearners');
 const statCourses = document.getElementById('statCourses');
 const statProjects = document.getElementById('statProjects');
 const track = document.getElementById('courseTrack');
+const courseTrack = document.getElementById("courseTrack");
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const demoForm = document.getElementById('demoForm');
@@ -55,28 +56,28 @@ const batchCourse = document.getElementById('batchCourse');
 const exportBatchCsvBtn = document.getElementById('exportBatchCsv');
 
 const courses = [
-  { id: 'c01', title: 'MERN Full Stack', level:'Beginner–Advanced', duration:'12 weeks' },
-  { id: 'c02', title: 'React + TypeScript', level:'Intermediate', duration:'6 weeks' },
-  { id: 'c03', title: 'Node.js & Express', level:'Intermediate', duration:'5 weeks' },
-  { id: 'c04', title: 'MongoDB & Prisma', level:'Intermediate', duration:'4 weeks' },
-  { id: 'c05', title: 'Data Structures & Algorithms', level:'All Levels', duration:'10 weeks' },
-  { id: 'c06', title: 'SQL from Zero to Hero', level:'Beginner', duration:'6 weeks' },
-  { id: 'c07', title: 'Python for Developers', level:'Beginner', duration:'8 weeks' },
-  { id: 'c08', title: 'DevOps Bootcamp', level:'Intermediate', duration:'8 weeks' },
-  { id: 'c09', title: 'Docker & Kubernetes', level:'Intermediate', duration:'6 weeks' },
-  { id: 'c10', title: 'AWS for Developers', level:'Intermediate', duration:'6 weeks' },
-  { id: 'c11', title: 'Git & GitHub Mastery', level:'Beginner', duration:'2 weeks' },
-  { id: 'c12', title: 'Next.js 15 Essentials', level:'Intermediate', duration:'5 weeks' },
-  { id: 'c13', title: 'Tailwind CSS Pro', level:'Beginner', duration:'2 weeks' },
-  { id: 'c14', title: 'System Design Basics', level:'Advanced', duration:'5 weeks' },
-  { id: 'c15', title: 'Java Spring Boot', level:'Intermediate', duration:'8 weeks' },
-  { id: 'c16', title: 'Android with Kotlin', level:'Intermediate', duration:'8 weeks' },
-  { id: 'c17', title: 'AI for Web Devs', level:'Intermediate', duration:'6 weeks' },
-  { id: 'c18', title: 'Prompt Engineering', level:'All Levels', duration:'3 weeks' },
-  { id: 'c19', title: 'Cybersecurity Basics', level:'Beginner', duration:'4 weeks' },
-  { id: 'c20', title: 'Data Analytics with Power BI', level:'Beginner', duration:'6 weeks' },
-  { id: 'c21', title: 'Rust for Backend', level:'Advanced', duration:'6 weeks' },
-  { id: 'c22', title: 'Go Microservices', level:'Advanced', duration:'6 weeks' },
+  { id: 'c01', title: 'MERN Full Stack', level:'Beginner–Advanced', duration:'12 weeks',img:"Mern-Stack.png" },
+  { id: 'c02', title: 'React + TypeScript', level:'Intermediate', duration:'6 weeks', img:"React+TypeScript.png" },
+  { id: 'c03', title: 'Node.js & Express', level:'Intermediate', duration:'5 weeks', img:"Nodejs.png" },
+  { id: 'c04', title: 'MongoDB & Prisma', level:'Intermediate', duration:'4 weeks', img: "mongodb.png" },
+  { id: 'c05', title: 'Data Structures & Algorithms', level:'All Levels', duration:'10 weeks',img:"DSA.png" },
+  { id: 'c06', title: 'SQL from Zero to Hero', level:'Beginner', duration:'6 weeks', img:"SQL.png" },
+  { id: 'c07', title: 'Python for Developers', level:'Beginner', duration:'8 weeks', img:"Python.png" },
+  { id: 'c08', title: 'DevOps Bootcamp', level:'Intermediate', duration:'8 weeks', img:"DevOps.png" },
+  { id: 'c09', title: 'Docker & Kubernetes', level:'Intermediate', duration:'6 weeks',img:"Docker-Kubernetes.png" },
+  { id: 'c10', title: 'AWS for Developers', level:'Intermediate', duration:'6 weeks',img:"AWS.png" },
+  { id: 'c11', title: 'Git & GitHub Mastery', level:'Beginner', duration:'2 weeks', img:"Git-Github.png" },
+  { id: 'c12', title: 'Next.js 15 Essentials', level:'Intermediate', duration:'5 weeks',img:"Nextjs.png" },
+  { id: 'c13', title: 'Tailwind CSS Pro', level:'Beginner', duration:'2 weeks', img:"TailwindCSS.png" },
+  { id: 'c14', title: 'System Design Basics', level:'Advanced', duration:'5 weeks', img:"SystemDesign.png" },
+  { id: 'c15', title: 'Java Spring Boot', level:'Intermediate', duration:'8 weeks', img:"JavaSpringBoot.png" },
+  { id: 'c16', title: 'Android with Kotlin', level:'Intermediate', duration:'8 weeks', img:"Android.png" },
+  { id: 'c17', title: 'AI for Web Devs', level:'Intermediate', duration:'6 weeks', img:"AI.png" },
+  { id: 'c18', title: 'Prompt Engineering', level:'All Levels', duration:'3 weeks', img:"PromptEngineering.png" },
+  { id: 'c19', title: 'Cybersecurity Basics', level:'Beginner', duration:'4 weeks',img:"Cybersecurity.png" },
+  { id: 'c20', title: 'Data Analytics with Power BI', level:'Beginner', duration:'6 weeks',img:"PowerBI.png" },
+  { id: 'c21', title: 'Rust for Backend', level:'Advanced', duration:'6 weeks',img:"Rust.png" },
+  { id: 'c22', title: 'Go Microservices', level:'Advanced', duration:'6 weeks',img:"Go.png" },
 ];
 
 let authMode = 'login';
@@ -194,25 +195,20 @@ async function hydrateStats() {
 /* ==================
    Build course cards
    ==================*/
-function renderCourses(){
-  courses.forEach(c => {
-    const o1 = document.createElement('option'); o1.value=c.title; o1.textContent=c.title; demoCourse.appendChild(o1);
-    const o2 = document.createElement('option'); o2.value=c.title; o2.textContent=c.title; batchCourse.appendChild(o2);
-  });
-  track.innerHTML = '';
-  courses.forEach(c => {
-    const card = document.createElement('div');
-    card.className = 'card course';
-    card.innerHTML = `
-      <div class="thumb"></div>
-      <h4>${c.title}</h4>
-      <div class="pill">${c.level}</div>
-      <p class="muted" style="margin:8px 0 12px">Duration: ${c.duration}</p>
-      <div style="display:flex;gap:8px">
-        <a class="btn" href="#demo" onclick="document.querySelector('#demoCourse').value='${c.title}'">Book Demo</a>
-        <a class="btn secondary" href="#batches" onclick="document.querySelector('#batchCourse').value='${c.title}'">Check Batches</a>
-      </div>`;
-    track.appendChild(card);
+function renderCourses() {
+  courses.forEach(course => {
+    const div = document.createElement("div");
+    div.className = "course card";
+    div.innerHTML = `
+      <div class="thumb">
+        <img src="${course.img || 'placeholder.png'}" 
+             alt="${course.title}" 
+             style="width:100%;height:150px;object-fit:cover;border-radius:12px;">
+      </div>
+      <h4>${course.title}</h4>
+      <span class="pill">${course.level}</span>
+    `;
+    courseTrack.appendChild(div);
   });
 }
 
