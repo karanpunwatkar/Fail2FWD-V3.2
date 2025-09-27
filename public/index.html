@@ -54,7 +54,13 @@
     .carousel{position:relative}
     .track{display:flex;gap:16px;overflow:hidden;scroll-behavior:smooth}
     .course{min-width:260px;flex:0 0 260px}
-    .course .thumb{height:130px;border-radius:12px;background:linear-gradient(135deg,rgba(100,181,246,.35),rgba(167,139,250,.35)),#0f172a;border:1px solid rgba(255,255,255,.08)}
+    .course .thumb {
+      height: 130px;
+      border-radius: 12px;
+      overflow: hidden; /* important: makes img corners round */
+      border: 1px solid rgba(255,255,255,.08);
+      background: none; /* remove gradient bg */
+}
     .course h4{margin:10px 0 6px;font-size:18px }
     .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);font-size:12px;color:#99f6e4}
     .navbtn{position:absolute;top:50%;transform:translateY(-50%);border:none;background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.12);width:42px;height:42px;border-radius:12px;cursor:pointer}
