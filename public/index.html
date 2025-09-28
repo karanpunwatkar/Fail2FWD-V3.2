@@ -100,6 +100,42 @@
       .grid.two{grid-template-columns:1fr}
       .nav ul{display:none}
     }
+     /* Footer Styling */
+footer {
+  background: #0a192f; /* dark navy */
+  color: #fff;
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: 20px;
+}
+
+.social-links a {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.social-links a:hover {
+  transform: scale(1.2);
+}
+
+.social-icon {
+  width: 30px;
+  height: 30px;
+  filter: invert(1); /* makes SVG white */
+}
     
   </style>
   <!-- Firebase SDKs -->
@@ -343,11 +379,19 @@
   </main>
 
   <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <div>© <span id="year"></span> Fail2FWD • All rights reserved.</div>
-      <div>Made with ❤️ in India • v2.1</div>
+  <div class="container footer-container">
+    <div>© <span id="year"></span> Fail2FWD • All rights reserved.</div>
+    <div>Made with ❤️ in India • v1.0</div>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/company/fail2fwd/?viewAsMember=true" target="_blank" aria-label="LinkedIn">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" class="social-icon">
+      </a>
+      <a href="https://www.youtube.com/@Fail2FWD" target="_blank" aria-label="YouTube">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" class="social-icon">
+      </a>
     </div>
-  </footer>
+  </div>
+</footer>
 
   <script src="script.js"></script>
 </body>
