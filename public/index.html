@@ -136,6 +136,28 @@ footer {
   height: 30px;
   filter: invert(1); /* makes SVG white */
 }
+
+     /* Grid container for batches */
+.batches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Individual batch card */
+.batch-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.batch-card:hover {
+  transform: translateY(-5px);
+}
     
   </style>
   <!-- Firebase SDKs -->
@@ -225,28 +247,70 @@ footer {
       </div>
     </section>
 
-     <!-- UPCOMING BATCHES SECTION (Publicly visible) -->
-    <section id="batches">
-      <div class="container">
-        <h2>Ongoing Batches</h2>
-        <p class="muted">Here are all the batches Schedule</p>
-        <div class="card" style="padding:16px">
-          <div style="overflow:auto">
-            <table id="studentBatchTable">
-              <thead>
-                <tr><th>Title</th><th>Course</th><th>Instructor</th><th>Mode</th><th>Start</th><th>Time</th></tr>
-                <tr><td>Batch 1</td><td>DSA using Python</td><td>Karan Punwatkar</td><td>Online</td><td><a href="https://meet.google.com/twt-hqxm-cic" target="_blank">Join</a><td>7:00 PM - 8:00 PM</td></td></tr>
-                <tr><td>Batch 2</td><td>DSA using Python</td><td>Karan Punwatkar</td><td>Online</td><td><a href="https://meet.google.com/twt-hqxm-cic" target="_blank">Join</a><td>6:00 PM - 7:00 PM</td><td></td></tr>
-                <tr><td>Batch 3</td><td>C Language for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td><a href="https://meet.google.com/twt-hqxm-cic" target="_blank">Join</a><td>8:00 AM - 9:00 AM</td><td></td></tr>
-                <tr><td>Batch 4</td><td>Python for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td><a href="https://meet.google.com/twt-hqxm-cic" target="_blank">Join</a><td>8:00 PM - 9:00 PM</td><td></td></tr>
-                <tr><td>Batch 5</td><td>Python for Beginners</td><td>Karan Punwatkar</td><td>Online</td><td><a href="https://meet.google.com/twt-hqxm-cic" target="_blank">Join</a><td>9:00 PM - 10:00 PM</td><td></td></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
+  <!-- UPCOMING BATCHES SECTION (Publicly visible) -->
+  <section id="batches">
+  <div class="container">
+    <h2>Upcoming Batches</h2>
+    <p class="muted">Check out our upcoming courses. Log in to join or get more details.</p>
+    
+    <div class="batches-grid">
+      <div class="batch-card">
+        <h3>Batch 1</h3>
+        <p class="course">DSA using Python</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">7:00 PM - 8:00 PM</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Join Now</a>
       </div>
-    </section>
+
+      <div class="batch-card">
+        <h3>Batch 2</h3>
+        <p class="course">DSA using Python</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">6:00 PM - 7:00 PM</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Join Now</a>
+      </div>
+
+      <div class="batch-card">
+        <h3>Batch 3</h3>
+        <p class="course">C Language for Beginners</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">8:00 AM - 9:00 AM</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Join Now</a>
+      </div>
+
+      <div class="batch-card">
+        <h3>Batch 4</h3>
+        <p class="course">Python for Beginners</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">8:00 PM - 9:00 PM</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Join Now</a>
+      </div>
+
+      <div class="batch-card">
+        <h3>Batch 5</h3>
+        <p class="course">Python for Beginners</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">9:00 PM - 10:00 PM</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Join Now</a>
+      </div>
+
+      <div class="batch-card">
+        <h3>Batch 6</h3>
+        <p class="course">Web Development</p>
+        <p class="instructor">Instructor: Karan Punwatkar</p>
+        <p class="mode">Mode: Online</p>
+        <p class="time">Coming Soon</p>
+        <a href="https://meet.google.com/xyz-123-batch1" target="_blank" class="join-btn">Coming Soon</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- DEMO LECTURE REGISTRATION -->
     <section id="demo">
@@ -381,7 +445,7 @@ footer {
   <footer>
   <div class="container footer-container">
     <div>© <span id="year"></span> Fail2FWD • All rights reserved.</div>
-    <div>Made with ❤️ in India • v2.1</div>
+    <div>Made with ❤️ in India • v2.2</div>
     <div class="social-links">
       <a href="https://www.linkedin.com/company/fail2fwd/?viewAsMember=true" target="_blank" aria-label="LinkedIn">
         <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" class="social-icon">
