@@ -375,6 +375,23 @@ exportBatchCsvBtn.addEventListener('click', async () => {
     download('fail2fwd_batches.csv', csv);
 });
 
+/* pdf access for my students */
+function checkPassword(inputId, linkId) {
+  const password = document.getElementById(inputId).value;
+  
+  // ✅ Set your passwords here for each module
+  const passwords = {
+    pass1: "python123",   // for Module 1
+    pass2: "clang456"     // for Module 2
+  };
+
+  if (password === passwords[inputId]) {
+    document.getElementById(linkId).classList.remove("hidden");
+  } else {
+    alert("Incorrect password! Try again.");
+  }
+}
+
 /* ==========
    Boot
    ========== */
