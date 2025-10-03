@@ -378,24 +378,11 @@ exportBatchCsvBtn.addEventListener('click', async () => {
 /* pdf access for my students */
 function checkPassword(inputId, linkId) {
   const password = document.getElementById(inputId).value;
-
-  // ✅ Define passwords per module
+  
+  // ✅ Set your passwords here for each module
   const passwords = {
-    "pass1-1": "python123",  // Python Module 1
-    "pass1-2": "python123",  // Python Module 2
-    "pass1-3": "python123",  // Python Module 3
-    "pass1-4": "python123",  // Python Module 4
-    "pass1-5": "python123",  // Python Module 5
-
-    "pass2-1": "clang456",   // C Module 1
-    "pass2-2": "clang456",   // C Module 2
-    "pass2-3": "clang456",
-    "pass2-4": "clang456",
-    "pass2-5": "clang456",
-    "pass2-6": "clang456",
-    "pass2-7": "clang456",
-    "pass2-8": "clang456",
-    "pass2-9": "clang456"
+    pass1: "python123",   // for Module 1
+    pass2: "clang456"     // for Module 2
   };
 
   if (password === passwords[inputId]) {
@@ -404,7 +391,6 @@ function checkPassword(inputId, linkId) {
     alert("Incorrect password! Try again.");
   }
 }
-
 
 /* ==========
    Boot
