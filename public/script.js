@@ -180,15 +180,15 @@ async function hydrateStats() {
         statLearners.textContent = (demoSnapshot.size + 80).toLocaleString('en-IN');
     } catch (error) {
         console.error("Error fetching demo stats: ", error);
-        statLearners.textContent = '80+';
+        statLearners.textContent = '130+';
     }
-    statCourses.textContent = '20+';
+    statCourses.textContent = '25+';
     statProjects.textContent = '50+';
     const now = new Date();
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 9, 1);
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 6, 1);
     const day = nextMonth.getDay();
     const diff = (1 - day + 7) % 7;
-    const nextCohortDate = new Date(new Date().getFullYear(), 9, 1);
+    const nextCohortDate = new Date(new Date().getFullYear(), 6, 1);
     nextCohortEl.textContent = nextCohortDate.toDateString() + ' • 7:00 PM IST';
 }
 
