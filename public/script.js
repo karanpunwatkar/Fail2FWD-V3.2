@@ -185,10 +185,10 @@ async function hydrateStats() {
     statCourses.textContent = '25+';
     statProjects.textContent = '50+';
     const now = new Date();
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 5, 1);
     const day = nextMonth.getDay();
     const diff = (1 - day + 7) % 7;
-    const nextCohortDate = new Date(new Date().getFullYear(), 6, 1);
+    const nextCohortDate = new Date(new Date().getFullYear(), 5, 1);
     nextCohortEl.textContent = nextCohortDate.toDateString() + ' • 7:00 PM IST';
 }
 
